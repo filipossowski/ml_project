@@ -222,12 +222,8 @@ __marimo__/
 # macOS
 .DS_Store
 
-# ML artifacts (keep folder structure via .gitkeep)
-mlruns/*
-!mlruns/.gitkeep
-logs/*
-!logs/.gitkeep
-models/*
-!models/.gitkeep
-data/*
-!data/.gitkeep
+# ML artifacts
+mlruns/
+logs/
+models/
+data/
