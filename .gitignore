@@ -218,3 +218,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# macOS
+.DS_Store
+
+# ML artifacts (keep folder structure via .gitkeep)
+mlruns/*
+!mlruns/.gitkeep
+logs/*
+!logs/.gitkeep
+models/*
+!models/.gitkeep
+data/*
+!data/.gitkeep
