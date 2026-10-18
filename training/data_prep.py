@@ -30,13 +30,17 @@ for city in all_df['city']:
         cities.append(city)
 print(cities)
 
-#data only from Szczecin (Poland)
-szn = all_df[all_df["city"] == "szczecin"]
-szn = szn.sort_values("month").drop_duplicates(subset="id", keep="first")
 
+cities_filtered = all_df.sort_values("month").drop_duplicates(subset="id", keep="first")
+cities_no_warsaw = cities_filtered[cities_filtered["city"] != "warszawa"]
 #how many apartments are covered
-print(f"Rows after filtering and deduplication: {len(szn)}")
-print(szn["month"].value_counts().sort_index())
+print(f"Rows after filtering and deduplication: {len(cities_filtered)}")
+print(cities_filtered["month"].value_counts().sort_index())
+
+#how many apartments are covered without Warsaw
+print(f"Rows after filtering and deduplication: {len(cities_no_warsaw)}")
+print(cities_no_warsaw["month"].value_counts().sort_index())
 
 #saving data
-szn.to_csv(os.path.join(PROCESSED_DIR, "szczecin.csv"), index=False)
+cities_filtered.to_csv(os.path.join(PROCESSED_DIR, "cities_filtered.csv"), index=False)
+cities_no_warsaw.to_csv(os.path.join(PROCESSED_DIR, "cities_no_warsaw.csv"), index=False)
