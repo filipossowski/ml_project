@@ -8,21 +8,9 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 import mlflow
 import mlflow.sklearn
+from features import load_data
 
-TARGET = "price"
-NUMERIC = ["squareMeters", "rooms", "floor", "floorCount", "buildYear", "centreDistance"]
-
-#loading, cleaning and filling data
-df_all = pd.read_csv("data/processed/cities_filtered.csv")
-df_all = df_all.dropna(subset=["floorCount"])
-df_all["floor"] = df_all["floor"].fillna(df_all["floor"].median())
-df_all["buildYear"] = df_all["buildYear"].fillna(df_all["buildYear"].median())
-
-CITY_COLS = [c for c in df_all.columns if c.startswith("city_")]
-FEATURES = NUMERIC + CITY_COLS
-
-X = df_all[FEATURES]
-y = df_all[TARGET]
+X, y, features = load_data()
 
 #splitting data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -51,7 +39,11 @@ with mlflow.start_run():
     mlflow.log_param("model_type", "RandomForestRegressor")
     mlflow.log_metric("mae", mae)
     mlflow.log_metric("rmse", rmse)
+    mlflow.log_metric("mape", mape)
     mlflow.log_metric("r2", r2)
+    mlflow.sklearn.log_model(model, name="model", skops_trusted_types=["sklearn.tree._tree.Tree"])
+
+
 
 os.makedirs("models", exist_ok=True)
 joblib.dump(model, "models/rf_all_cities_v1.joblib")
