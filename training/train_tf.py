@@ -32,7 +32,7 @@ with mlflow.start_run():
     model.fit(X_train, np.log1p(y_train), validation_split=0.2, epochs=200,
               batch_size=256, callbacks=[early_stop], verbose=2)
 
-    # ---- Evaluation (back in zł) ----
+#evaluation
     preds = np.expm1(model.predict(X_test, verbose=0).squeeze())
     mae = mean_absolute_error(y_test, preds)
     rmse = np.sqrt(mean_squared_error(y_test, preds))
