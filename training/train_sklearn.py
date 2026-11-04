@@ -9,6 +9,8 @@ import joblib
 import mlflow
 import mlflow.sklearn
 from features import load_data
+from evidently.presets import DataDriftPreset
+from evidently import Report
 
 X, y, features = load_data()
 
@@ -43,9 +45,14 @@ with mlflow.start_run():
     mlflow.log_metric("r2", r2)
     mlflow.sklearn.log_model(model, name="model", skops_trusted_types=["sklearn.tree._tree.Tree"])
 
-
+report = Report(metrics=[DataDriftPreset()])
+report.run(reference_data=X_train, current_data=X_test)
+report.save_html("reports/drift_report.html")
 
 os.makedirs("models", exist_ok=True)
 joblib.dump(model, "models/rf_all_cities_v1.joblib")
+
+X_train.to_csv("data/train.csv", index=False)
+X_test.to_csv("data/live.csv", index=False)
 
 
