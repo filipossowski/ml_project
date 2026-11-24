@@ -227,3 +227,7 @@ mlruns/
 logs/
 models/
 data/
+
+# rcn data
+training/rcn_raw.csv
+data/processed/rcn_cities.csv
