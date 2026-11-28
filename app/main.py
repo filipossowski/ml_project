@@ -23,8 +23,8 @@ REQUEST_LATENCY = Histogram("request_latency_seconds", "Request latency")
 
 @app.on_event("startup")
 def load():
-    global sk_model, tf_model
-    sk_model, tf_model = load_models()
+    global sk_rcn_model, sk_model, tf_model
+    sk_rcn_model, sk_model, tf_model = load_models()
 
 @app.post("/predict")
 @REQUEST_LATENCY.time()
@@ -34,6 +34,8 @@ def predict(req: PredictRequest):
     try:
         if req.model == "sklearn":
             preds = sk_model.predict(X).tolist()
+        elif req.model == "rcn":
+            preds = sk_rcn_model.predict(X).tolist()
         else:
             preds = np.expm1(tf_model.predict(X).flatten()).tolist()
 
